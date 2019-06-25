@@ -10,6 +10,8 @@ This tool is a GUI frontend for FFMPEG to make it easier to choose files and bur
 
 Shows estimated time remaining for conversion.
 
+Download from the [Releases](https://github.com/keeganatorr/FFMpegTool/releases) tab above.
+
 ### Prerequisites
 
 Visual Studio 2019 - (An earlier version might work.)
