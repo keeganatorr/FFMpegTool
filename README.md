@@ -1,7 +1,5 @@
 # FFMpegTool
 
-# Project Title
-
 GUI for FFMPEG using C#/WPF.
 
 ## Description
