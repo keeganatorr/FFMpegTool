@@ -40,9 +40,9 @@ Run `choco install ffmpeg`.
 
 ## Contains
 
-- [ ] Launching external console process and capturing output to textbox.
-- [ ] Sending CTRL-C command to external process.
-- [ ] Font Picker (external library).
+- Launching external console process and capturing output to textbox.
+- Sending CTRL-C command to external process.
+- Font Picker (external library).
 
 ## Authors
 
