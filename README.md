@@ -10,9 +10,7 @@ Shows estimated time remaining for conversion.
 
 Download from the [Releases](https://github.com/keeganatorr/FFMpegTool/releases) tab above.
 
-### Prerequisites
-
-Visual Studio 2019 - (An earlier version might work.)
+### Running Prerequisites
 
 This software requires FFMPEG installed and linked in your PATH environment variable.
 
@@ -24,11 +22,15 @@ Open the command line `cmd.exe`.
 
 Run `choco install ffmpeg`.
 
-## Screenshots
+### Build Prerequisites
+
+Visual Studio 2019 - (An earlier version might work.)
+
+### Screenshots
 
 ![](MainWindow.png)
 
-## To Do
+### To Do
 
 - [ ] Add cutting out sections of video.
 - [ ] External subtitles.
@@ -39,17 +41,17 @@ Run `choco install ffmpeg`.
 - [ ] List functionality and code snippets avaliable
 - [ ] Add filename output name textbox.
 
-## Contains
+### Contains
 
 - Launching external console process and capturing output to textbox.
 - Sending CTRL-C command to external process.
 - Font Picker (external library).
 
-## Authors
+### Authors
 
 keeganatorr
 
-## Acknowledgments
+### Acknowledgments
 
 Stack Overflow: [Code found at thread](https://stackoverflow.com/questions/283128/how-do-i-send-ctrlc-to-a-process-in-c)
 
