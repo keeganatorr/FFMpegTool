@@ -43,3 +43,4 @@ keeganatorr
 
 Stack Overflow: [Code found at thread](https://stackoverflow.com/questions/283128/how-do-i-send-ctrlc-to-a-process-in-c)
 FFMPEG Developers
+[Wpf Color Font Dialog](https://github.com/sskodje/WpfColorFont)
