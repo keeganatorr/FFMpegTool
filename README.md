@@ -34,6 +34,7 @@ Run `choco install ffmpeg`.
 - [ ] Custom output type. (defaults to avi currently)
 - [ ] Add comments to code.
 - [ ] Clean up layout.
+- [ ] List functionality and code snippets avaliable
 
 ## Authors
 
