@@ -37,6 +37,7 @@ Run `choco install ffmpeg`.
 - [ ] Add comments to code.
 - [ ] Clean up layout.
 - [ ] List functionality and code snippets avaliable
+- [ ] Add filename output name textbox.
 
 ## Contains
 
