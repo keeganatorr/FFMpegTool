@@ -20,6 +20,8 @@ A simple way to do this is:
 
 Install [Chocolately](https://chocolatey.org/).
 
+Open the command line `cmd.exe`.
+
 Run `choco install ffmpeg`.
 
 ## Screenshots
