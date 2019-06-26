@@ -40,6 +40,7 @@ Visual Studio 2019 - (An earlier version might work.)
 - [ ] Clean up layout.
 - [ ] List functionality and code snippets avaliable
 - [ ] Add filename output name textbox.
+- [ ] Add video preview?
 
 ### Contains
 
