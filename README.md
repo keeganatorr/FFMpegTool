@@ -28,8 +28,7 @@ Visual Studio 2019 - (An earlier version might work.)
 
 ### Screenshots
 
-![](MainWindow.png)
-
+![](FFMpegToolScreen1.png)
 
 ### To Do
 

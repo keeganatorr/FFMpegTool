@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FFMpegTool"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="500">
+        Title="FFMpegTool" Height="800" Width="500">
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*"></ColumnDefinition>
