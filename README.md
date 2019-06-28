@@ -30,16 +30,14 @@ Visual Studio 2019 - (An earlier version might work.)
 
 ![](MainWindow.png)
 
+
 ### To Do
 
 - [ ] Add cutting out sections of video.
 - [ ] External subtitles.
 - [ ] Resize/Cropping.
-- [ ] Custom output type. (defaults to avi currently)
 - [ ] Add comments to code.
-- [ ] Clean up layout.
-- [ ] List functionality and code snippets avaliable
-- [ ] Add filename output name textbox.
+- [ ] List functionality and code snippets available
 
 ### Contains
 
