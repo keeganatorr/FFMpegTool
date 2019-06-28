@@ -9,6 +9,7 @@ namespace FFMpegTool
 {
 	public class FileManager
 	{
+		public bool Loaded = false;
 		public string FullFilename;
 		public string Filename;
 		public string FilenameNoExt;
@@ -17,6 +18,9 @@ namespace FFMpegTool
 		public string outputFileType;
 		public FontInfo FontInfo;
 		public string FileDuration;
+
+		public bool FontBold = false;
+		public bool FontItalic = false;
 
 		public FileManager()
 		{
@@ -37,6 +41,7 @@ namespace FFMpegTool
 			int FilenameExtPoint = Filename.LastIndexOf(".");
 			FilenameNoExt = Filename.Substring(0, FilenameExtPoint);
 			FileExt = Filename.Substring(FilenameExtPoint, Filename.Length - FilenameExtPoint);
+			Loaded = true;
 		}
 
 		public void SetFont(FontInfo fontInfo)

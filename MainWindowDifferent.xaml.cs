@@ -34,8 +34,6 @@ namespace FFMpegTool
 		Process process;
 		public Stopwatch stopwatch;
 
-
-
 		bool FirstLine = false;
 		public TimeSpan VideoDuration;
 		public TimeSpan VideoParsed;
@@ -47,13 +45,13 @@ namespace FFMpegTool
 		{
 			InitializeComponent();
 			fileManager = new FileManager();
-			fileManager.SetFont(FontInfo.GetControlFont(LoadedFontFamily));
+			fileManager.SetFont(FontInfo.GetControlFont(LoadedFont));
 			//process = new Process();
 			stopwatch = new Stopwatch();
 			//workerManager = new WorkerManager(FFMpegProgress, ConsoleBox);
 		}
 
-
+		
 
 		protected override void OnClosing(CancelEventArgs e)
 		{
@@ -75,20 +73,12 @@ namespace FFMpegTool
 				LoadedFileType.Text = fileManager.FileExt;
 				WorkingDirectory.Text = fileManager.WorkingDirectory;
 				OutputFileType = fileManager.FileExt;
-
-				OutputFilenameTextbox.Text = fileManager.FilenameNoExt + "-Output";
-				ResultFilenameTextbox.Text = fileManager.FilenameNoExt + "-Output" + fileManager.FileExt;
 				//Duration.Text = fileManager.FileDuration;
 				//OutputType.SelectedItem = OutputFileType;
 				// Set initial font for picker
 
 			}
-
-
-			// Enable next UI sections
-			SubtitleCB.IsEnabled = true;
-			OutputFileTypeCombo.IsEnabled = true;
-			CustomFilenameOutputCB.IsEnabled = true;
+			UpdateOutputSettingsText();
 		}
 
 		private void OpenFont_Click(object sender, RoutedEventArgs e)
@@ -101,13 +91,18 @@ namespace FFMpegTool
 				if (font != null)
 				{
 					fileManager.SetFont(font);
-					LoadedFontFamily.Text = fileManager.FontInfo.Family.ToString();
-					LoadedFontStyle.Text = fileManager.FontInfo.Style.ToString();
-					LoadedFontWeight.Text = fileManager.FontInfo.Weight.ToString();
-					LoadedFontSize.Text = fileManager.FontInfo.Size.ToString();
-					LoadedFontColor.Text = fileManager.FontInfo.BrushColor.ToString();
+					LoadedFont.Text = (fileManager.FontInfo.Family.ToString()
+									+ ", "
+									+ fileManager.FontInfo.Style.ToString()
+									+ ", "
+									+ fileManager.FontInfo.Weight.ToString()
+									+ ", "
+									+ fileManager.FontInfo.Size.ToString()
+									+ ", "
+									+ fileManager.FontInfo.Color.ToString());
 				}
 			}
+			UpdateOutputSettingsText();
 		}
 
 		private void ConvertButton_Click(object sender, RoutedEventArgs e)
@@ -117,12 +112,8 @@ namespace FFMpegTool
 				process = new Process();
 				process.StartInfo.FileName = "ffmpeg";
 				process.StartInfo.WorkingDirectory = fileManager.WorkingDirectory;
-
-				string ffmpegArguments = $"-i {fileManager.Filename} -vf subtitles=\"f={fileManager.Filename}:si=0:force_style='FontName={fileManager.FontInfo.Family},FontSize={fileManager.FontInfo.Size},WrapStyle=2,Borderstyle=1,Outline=1,Bold={fileManager.FontBold.ToInt()},Italic={fileManager.FontItalic.ToInt()}'\" {ResultFilenameTextbox.Text} -y";
 				// {fileManager.FileExt} // fix output type
-				process.StartInfo.Arguments = ffmpegArguments;
-
-				FFMpegOutputCommand.Text = "ffmpeg " + ffmpegArguments;
+				process.StartInfo.Arguments = $"-i {fileManager.Filename} -vf subtitles=\"f={fileManager.Filename}:si=0:force_style='FontName={fileManager.FontInfo.Family} {fileManager.FontInfo.Weight},FontSize={fileManager.FontInfo.Size},WrapStyle=2,Borderstyle=1,Outline=1'\" {fileManager.Filename}-Subbed.avi -y";
 				//process.StartInfo.Arguments = "google.com";
 				//process.StartInfo.Arguments = "/c DIR";
 				process.StartInfo.UseShellExecute = false;
@@ -147,6 +138,7 @@ namespace FFMpegTool
 
 				ConvertButton.IsEnabled = false;
 				CancelButton.IsEnabled = true;
+				UpdateOutputSettingsText();
 				ConsoleBox.Text = "";
 				stopwatch.Reset();
 				stopwatch.Start();
@@ -158,8 +150,6 @@ namespace FFMpegTool
 			ConvertButton.IsEnabled = true;
 			CancelButton.IsEnabled = false;
 			stopwatch.Stop();
-			Percentage.Text = "100";
-			FFMpegProgress.Value = 100;
 			process = null;
 		}
 
@@ -178,14 +168,12 @@ namespace FFMpegTool
 				output = "\n" + outLine.Data;
 			}
 			//Console.WriteLine(outLine.Data);
-			ConsoleBox.Dispatcher.BeginInvoke(new Action(() =>
-			{
+			ConsoleBox.Dispatcher.BeginInvoke(new Action(() => {
 				ConsoleBox.Text += output;
 				ConsoleBox.CaretIndex = ConsoleBox.Text.Length;
 				ConsoleBox.ScrollToEnd();
 			}), null);
-			LastLine.Dispatcher.BeginInvoke(new Action(() =>
-			{
+			LastLine.Dispatcher.BeginInvoke(new Action(() => {
 				LastLine.Text = output;
 			}), null);
 			/*string test = output + "a";
@@ -193,6 +181,18 @@ namespace FFMpegTool
 				Time.Text = test;
 			}), null);*/
 		}
+
+
+		//public delegate void DataReceivedHandler(object sender,	DataReceivedEventArgs e);
+
+
+
+		/*private void OutputType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			string SelectedVal = (((ComboBox) sender).SelectedValue).ToString();
+			int extIndex = SelectedVal.LastIndexOf(".")-1;
+			fileManager.outputFileType = SelectedVal.Substring(extIndex, SelectedVal.Length - extIndex); ;
+		}*/
 
 		internal const int CTRL_C_EVENT = 0;
 		[DllImport("kernel32.dll")]
@@ -241,6 +241,11 @@ namespace FFMpegTool
 					process.Kill();
 				}
 			}
+		}
+
+		private void UpdateOutputSettingsText()
+		{
+			OutputSettings.Text = $"Filename: {fileManager.Filename}, Font: {fileManager.FontInfo.Family}, Weight: {fileManager.FontInfo.Weight}, Size: {fileManager.FontInfo.Size}, Output: {fileManager.outputFileType}";
 		}
 
 		private void LastLine_TextChanged(object sender, TextChangedEventArgs e)
@@ -297,13 +302,13 @@ namespace FFMpegTool
 
 			string TimeFound = "";
 
-			if (TimeMatch.Success)
+			if(TimeMatch.Success)
 			{
 
-				int Hours = Convert.ToInt32(TimeMatch.Groups[1].Value);
-				int Minutes = Convert.ToInt32(TimeMatch.Groups[2].Value);
-				int Seconds = Convert.ToInt32(TimeMatch.Groups[3].Value);
-				int Milliseconds = Convert.ToInt32(TimeMatch.Groups[4].Value) * 10;
+				int Hours        = Convert.ToInt32(TimeMatch.Groups[1].Value);
+				int Minutes      = Convert.ToInt32(TimeMatch.Groups[2].Value);
+				int Seconds      = Convert.ToInt32(TimeMatch.Groups[3].Value);
+				int Milliseconds = Convert.ToInt32(TimeMatch.Groups[4].Value)*10;
 
 				VideoParsed = new TimeSpan(0, Hours, Minutes, Seconds, Milliseconds);
 
@@ -311,124 +316,22 @@ namespace FFMpegTool
 
 				TimeRemaining = (VideoDuration - VideoParsed).Divide(ConvertSpeed);
 
-				TimeSpan TotalConversionTime = VideoDuration.Divide(ConvertSpeed);
-
-
-				TimeFound = $"Video Time Parsed: {VideoParsed}\n" +
-							$"Current Running Time: {TimeFromStart}\n" +
-							$"Time Remaining: {TimeRemaining}\n" +
-							$"TotalConvertTime: {TotalConversionTime}\n";
-
-				// estimate total conversion time
-
-				decimal percentLeft = (1 - TimeRemaining.Divide(TotalConversionTime)) * 100;
-
-				Percentage.Text = percentLeft.ToString();
-
-				FFMpegProgress.Value = Convert.ToDouble(percentLeft);
+				TimeFound = $"Video Time Parsed: {VideoParsed}," +
+							$" Current Running Time: {TimeFromStart}" +
+							$" Time Remaining: {TimeRemaining}";
 
 			}
 
 			Time.Text = TimeFound;
 
-			if (process != null)
+			if(process.HasExited)
 			{
-				if (process.HasExited)
-				{
-					ExitProcess();
-				}
+				ExitProcess();
 			}
 
 		}
 
-		private void CustomFilenameOutputCB_Click(object sender, RoutedEventArgs e)
-		{
-			OutputFilenameTextbox.IsEnabled = CustomFilenameOutputCB.IsChecked.Value;
-			if (!CustomFilenameOutputCB.IsChecked.Value)
-			{
-				OutputFilenameTextbox.Text = fileManager.FilenameNoExt + "-Output";
-				if (OutputFileTypeCombo.SelectedItem != null)
-				{
-					ResultFilenameTextbox.Text = OutputFilenameTextbox.Text + ((ComboBoxItem)OutputFileTypeCombo.SelectedItem).Content.ToString();
-				}
-			}
-		}
-
-		private void OutputFileTypeCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-			if (!CustomFilenameOutputCB.IsChecked.Value)
-			{
-				OutputFilenameTextbox.Text = fileManager.FilenameNoExt + "-Output";
-				if (OutputFileTypeCombo.SelectedItem != null)
-				{
-					ResultFilenameTextbox.Text = OutputFilenameTextbox.Text + ((ComboBoxItem)OutputFileTypeCombo.SelectedItem).Content.ToString();
-				}
-			}
-			else
-			{
-				ResultFilenameTextbox.Text = OutputFilenameTextbox.Text + ((ComboBoxItem)OutputFileTypeCombo.SelectedItem).Content.ToString();
-			}
-			//OutputFilenameTextbox.Text = ;
-			CheckConvertButtonReady();
-		}
-
-		private void OutputFilenameTextbox_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			if (OutputFileTypeCombo.SelectedItem != null)
-			{
-				ResultFilenameTextbox.Text = OutputFilenameTextbox.Text + ((ComboBoxItem)OutputFileTypeCombo.SelectedItem).Content.ToString();
-			}
-		}
-
-		private void CheckConvertButtonReady()
-		{
-			if (fileManager.Loaded)
-			{
-				if (OutputFileTypeCombo.SelectedItem != null)
-				{
-					ConvertButton.IsEnabled = true;
-				}
-				else
-					ConvertButton.IsEnabled = false;
-			}
-			else
-				ConvertButton.IsEnabled = false;
-		}
-
-		private void SubtitleCB_Click(object sender, RoutedEventArgs e)
-		{
-			OpenFont.IsEnabled = SubtitleCB.IsChecked.Value;
-		}
-
-		private void LoadedFontStyle_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			switch (fileManager.FontInfo.Style.ToString())
-			{
-				case "Oblique":
-				case "Italic":
-					fileManager.FontItalic = true;
-					break;
-				case "Normal":
-				default:
-					fileManager.FontItalic = false;
-					break;
-			}
-		}
-
-		private void LoadedFontWeight_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			switch (fileManager.FontInfo.Weight.ToString())
-			{
-				case "SemiBold":
-				case "Bold":
-				case "Black":
-					fileManager.FontBold = true;
-					break;
-				default:
-					fileManager.FontBold = false;
-					break;
-			}
-		}
+		
 	}
 
 	public static class TimeSpanExtension
@@ -450,7 +353,7 @@ namespace FFMpegTool
 		}
 
 		/// <summary>
-		/// Divides a timespan by an integer value
+		/// Multiplies a timespan by an integer value
 		/// </summary>
 		public static TimeSpan Divide(this TimeSpan multiplicand, int divider)
 		{
@@ -458,31 +361,11 @@ namespace FFMpegTool
 		}
 
 		/// <summary>
-		/// Divides a timespan by an integer value
-		/// </summary>
-		public static decimal Divide(this TimeSpan multiplicand, TimeSpan divider)
-		{
-			return ((decimal)multiplicand.Ticks / (decimal)divider.Ticks);
-		}
-
-		/// <summary>
-		/// Divides a timespan by a double value
+		/// Multiplies a timespan by a double value
 		/// </summary>
 		public static TimeSpan Divide(this TimeSpan multiplicand, double divider)
 		{
 			return TimeSpan.FromTicks((long)(multiplicand.Ticks / divider));
-		}
-	}
-
-	public static class BooleanExtention
-	{
-		/// <summary>
-		/// Multiplies a timespan by an integer value
-		/// </summary>
-		public static int ToInt(this bool boolean)
-		{
-			if (boolean) return 1;
-			else return 0;
 		}
 	}
 }

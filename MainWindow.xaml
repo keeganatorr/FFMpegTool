@@ -5,81 +5,249 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FFMpegTool"
         mc:Ignorable="d"
-        Title="MainWindow" Height="662" Width="500"
-		ResizeMode="CanMinimize">
+        Title="MainWindow" Height="800" Width="500">
 	<Grid>
-		<GroupBox>
-			<GroupBox.Header>FFMpeg</GroupBox.Header>
-			<GroupItem>
-				<StackPanel Orientation="Vertical" Margin="5,5,5,5">
-					<StackPanel Orientation="Horizontal">
-						<Button Width="96" x:Name="OpenFile" Click="OpenFile_Click">Open File</Button>
-						<Label>Filename: </Label>
-						<TextBox x:Name="LoadedFileName" Width="291"></TextBox>
-					</StackPanel>
-					<StackPanel Orientation="Horizontal" Margin="0,5,0,5">
-						<Label>Filetype:</Label>
-						<TextBox x:Name="LoadedFileType" Width="47"></TextBox>
-						<Label>Working Directory:</Label>
-						<TextBox x:Name="WorkingDirectory" Width="71"></TextBox>
-						<Label>Duration:</Label>
-						<TextBox x:Name="Duration" Width="121"></TextBox>
-					</StackPanel>
-					<GroupBox>
-						<GroupBox.Header>Trim - (Leave blank for no trim)  </GroupBox.Header>
-						<StackPanel>
-							<Label>Starting time: 00:00:00.0 HH:MM:SS, Length 00:00:00.0 HH:MM:SS</Label>
-							<StackPanel Orientation="Horizontal">
-								<Label>Start</Label>
-								<TextBox Width="50" Height="20"></TextBox>
-								<Label>Length</Label>
-								<TextBox Width="50" Height="20"></TextBox>
-							</StackPanel>
-						</StackPanel>
-					</GroupBox>
-					<GroupBox>
-						<GroupBox.Header>Subtitles</GroupBox.Header>
-						<StackPanel>
-							<StackPanel Orientation="Horizontal">
-								<Label>Add Subtitles</Label>
-								<CheckBox VerticalAlignment="Center"></CheckBox>
-							</StackPanel>
-							<StackPanel Orientation="Horizontal">
-								<Label>Font</Label>
-								<Button Width="96" x:Name="OpenFont" Click="OpenFont_Click">Choose Font</Button>
-								<TextBox Width="316" x:Name="LoadedFont"></TextBox>
-							</StackPanel>
-						</StackPanel>
-					</GroupBox>
-					<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,0">
-						<Label>Settings: </Label>
-						<TextBox x:Name="OutputSettings" Width="181"></TextBox>
-						<Label>Choose output file type:</Label>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"></ColumnDefinition>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="110"></RowDefinition> <!--start-->
+			<RowDefinition Height="110"></RowDefinition>
+			<RowDefinition Height="135"></RowDefinition>
+			<RowDefinition Height="150"></RowDefinition>
+			<RowDefinition Height="200*"></RowDefinition>
+		</Grid.RowDefinitions>
+
+		<GroupBox Grid.Row="0" Grid.Column="0" >
+			<GroupBox.Header>
+				<Label FontSize="24" Content="FFMpegTool" />
+			</GroupBox.Header>
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="30"></RowDefinition>
+					<RowDefinition Height="30"></RowDefinition>
+				</Grid.RowDefinitions>
+				<DockPanel>
+					<Button Width="100" Margin="2,2,5,2" DockPanel.Dock="Left" Grid.ColumnSpan="2" x:Name="OpenFile" Click="OpenFile_Click" Content="Open File" />
+					<Label   Content="Working Directory:" VerticalAlignment="Center" />
+					<TextBox IsEnabled="False" Margin="0,5,0,5" x:Name="WorkingDirectory" />
+				</DockPanel>
+				<DockPanel Grid.Row="1">
+					<DockPanel DockPanel.Dock="Left">
+						<Label   Content="Filetype:" VerticalAlignment="Center" />
+						<TextBox IsEnabled="False" Width="100" Margin="0,5,0,5"  x:Name="LoadedFileType" />
+					</DockPanel>
+					
+					<DockPanel DockPanel.Dock="Right">
+						<Label   Content="Duration:" VerticalAlignment="Center" />
+						<TextBox IsEnabled="False" Width="100"  Margin="0,5,0,5" x:Name="Duration" />
+					</DockPanel>
+					<DockPanel>
+						<Label   Content="Filename:" VerticalAlignment="Center" />
+						<TextBox IsEnabled="False" Margin="0,5,0,5" x:Name="LoadedFileName" />
+					</DockPanel>
+				</DockPanel>
+				<!--<DockPanel Grid.Row="2">
+					<Label Content="Does the video contain subtitles? if not load external, if neither, subtitles cannot be enabled"/>
+				</DockPanel>-->
+			</Grid>
+
+		</GroupBox>
+
+		<GroupBox Grid.Row="1" Grid.Column="0" >
+			<GroupBox.Header>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<Label    Grid.Column="0" FontSize="20" Content="Enable Subtitles:" />
+					<CheckBox x:Name="SubtitleCB" Click="SubtitleCB_Click" IsEnabled="False" Grid.Column="2" VerticalAlignment="Center" Margin="0,5.8,0,0"/>
+				</Grid>
+			</GroupBox.Header>
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="30"></RowDefinition>
+					<RowDefinition Height="5"></RowDefinition>
+					<RowDefinition Height="30"></RowDefinition>
+				</Grid.RowDefinitions>
+				<DockPanel>
+					<Button IsEnabled="False" DockPanel.Dock="Left" Width="100" Margin="2,2,5,2" Grid.Row="0" Grid.Column="0" x:Name="OpenFont" Click="OpenFont_Click" Content="Choose Font" />
+					<DockPanel DockPanel.Dock="Right">
+						<Label Content="Style:" VerticalAlignment="Center" />
+						<TextBox TextChanged="LoadedFontStyle_TextChanged" IsEnabled="False" Margin="0,5,0,5" Width="100" x:Name="LoadedFontStyle" />
+					</DockPanel>
+					<DockPanel>
+						<Label Content="Family:" VerticalAlignment="Center" />
+						<TextBox IsEnabled="False" Margin="0,5,0,5" x:Name="LoadedFontFamily" />
+					</DockPanel>
+				</DockPanel>
+				<Grid Grid.Row="2">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<DockPanel Grid.Column="0">
+						<Label Content="Weight:" VerticalAlignment="Center" />
+						<TextBox TextChanged="LoadedFontWeight_TextChanged" IsEnabled="False" Margin="0,5,0,5" x:Name="LoadedFontWeight" />
+					</DockPanel>
+					<DockPanel Grid.Column="1">
+						<Label Content="Size:" VerticalAlignment="Center" />
+						<TextBox IsEnabled="False" Margin="0,5,0,5" x:Name="LoadedFontSize" />
+					</DockPanel>
+					<DockPanel Grid.Column="2">
+						<Label Content="Color:" VerticalAlignment="Center" />
+						<TextBox IsEnabled="False" Margin="0,5,0,5" x:Name="LoadedFontColor" />
+					</DockPanel>
+					
+				</Grid>
+				<!--<Grid Grid.Row="3">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<Label>Textbox sample font here</Label>
+
+				</Grid>-->
+			</Grid>
+		</GroupBox>
+
+		<GroupBox Grid.Row="2" Grid.Column="0" >
+			<GroupBox.Header>
+				<Grid>
+					<Label    Grid.Column="0" FontSize="20" Content="Options" />
+				</Grid>
+			</GroupBox.Header>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="30"></RowDefinition>
+					<RowDefinition Height="30"></RowDefinition>
+					<RowDefinition Height="30"></RowDefinition>
+				</Grid.RowDefinitions>
+				<DockPanel>
+					<Label Content="Output File Extension:" />
+					<ComboBox IsEnabled="False" x:Name="OutputFileTypeCombo" SelectionChanged="OutputFileTypeCombo_SelectionChanged" Margin="0,3,0,3" Width="70" HorizontalAlignment="Left">
+						<ComboBoxItem Content=".mkv"></ComboBoxItem>
+						<ComboBoxItem Content=".mp4"></ComboBoxItem>
+						<ComboBoxItem Content=".avi"></ComboBoxItem>
+					</ComboBox>
+				</DockPanel>
+				<DockPanel Grid.Row="1">
+					
+					<DockPanel DockPanel.Dock="Right">
+						<Label Content="Custom:" />
+						<CheckBox IsEnabled="False" Click="CustomFilenameOutputCB_Click" x:Name="CustomFilenameOutputCB" VerticalAlignment="Center" Margin="-3,-2,5,0"/>
+					</DockPanel>
+					<DockPanel>
+						<Label Content="Output Filename:" />
+						<TextBox TextChanged="OutputFilenameTextbox_TextChanged" x:Name="OutputFilenameTextbox" IsEnabled="False" Margin="-1,5,2,5"/>
+					</DockPanel>
+				</DockPanel>
+				<DockPanel Grid.Row="2">
+
+					<DockPanel >
+						<Label Content="Result:" />
+						<TextBox IsEnabled="False" x:Name="ResultFilenameTextbox" Margin="-1,5,2,5"/>
+					</DockPanel>
+				</DockPanel>
+			</Grid>
+		</GroupBox>
+
+
+		<GroupBox Grid.Row="3" Grid.Column="0" >
+			<GroupBox.Header>
+				<Grid>
+					<Label    Grid.Column="0" FontSize="20" Content="Conversion" />
+				</Grid>
+			</GroupBox.Header>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="30"></RowDefinition>
+					<RowDefinition Height="30"></RowDefinition>
+					<RowDefinition Height="10"></RowDefinition>
+					<RowDefinition Height="30"></RowDefinition>
+				</Grid.RowDefinitions>
+				<!--<DockPanel Grid.ColumnSpan="2">
+					<Label Content="Settings:" VerticalAlignment="Center" />
+					<TextBox Margin="0,5,0,5" x:Name="OutputSettings" />
+				</DockPanel>-->
+				<DockPanel Grid.ColumnSpan="2">
+					<Label Content="FFMpeg Command: "/>
+					<TextBox IsEnabled="False" x:Name="FFMpegOutputCommand" Margin="0,5,0,5"/>
+				</DockPanel>
+				<Button IsEnabled="False" Grid.Row="1" Grid.Column="0" x:Name="ConvertButton" Click="ConvertButton_Click" Content="Convert" />
+				<Button Grid.Row="1" Grid.Column="1" x:Name="CancelButton" Click="CancelButton_Click" IsEnabled="False" Content="Cancel" />
+				<ProgressBar Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" x:Name="FFMpegProgress" />
+			</Grid>
+		</GroupBox>
+
+		<GroupBox Grid.Row="4" Grid.Column="0" >
+			<GroupBox.Header>
+				<Grid>
+					<Label    Grid.Column="0" FontSize="20" Content="Output" />
+				</Grid>
+			</GroupBox.Header>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="100" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"></RowDefinition>
+					<RowDefinition Height="30"></RowDefinition>
+					<RowDefinition Height="30"></RowDefinition>
+					<RowDefinition Height="30"></RowDefinition>
+				</Grid.RowDefinitions>
+				<TextBox Grid.Row="0" Grid.ColumnSpan="2" IsEnabled="False" x:Name="ConsoleBox" VerticalScrollBarVisibility="Visible" FontSize="7" FontFamily="Consolas" />
+				<Label   Grid.Row="1" Grid.Column="0" Visibility="Hidden" Content="Last Line" VerticalAlignment="Center" />
+				<TextBox Grid.Row="1" Grid.Column="1" Visibility="Hidden" IsEnabled="False" Width="387" FontSize="7" FontFamily="Consolas" x:Name="LastLine" TextChanged="LastLine_TextChanged" />
+				<Label   Grid.Row="1" Grid.Column="0" Content="Time" />
+				<TextBox Grid.Row="1" Grid.Column="1" IsEnabled="False" FontSize="7" FontFamily="Consolas" x:Name="Time" />
+				<Label   Grid.Row="2" Grid.Column="0" Content="Speed" />
+				<TextBox Grid.Row="2" Grid.Column="1" IsEnabled="False" FontSize="7" FontFamily="Consolas" x:Name="Speed" />
+				<Label   Grid.Row="3" Grid.Column="0" Content="Percentage" />
+				<TextBox Grid.Row="3" Grid.Column="1" IsEnabled="False" FontSize="7" FontFamily="Consolas" x:Name="Percentage" />
+
+			</Grid>
+		</GroupBox>
+
+
+
+
+
+
+		<!--
+		<GroupBox.Header>Trim - (Leave blank for no trim)</GroupBox.Header>
+		<StackPanel>
+			<Label>Starting time: 00:00:00.0 HH:MM:SS, Length 00:00:00.0 HH:MM:SS</Label>
+			<StackPanel Orientation="Horizontal">
+				<Label>Start</Label>
+				<TextBox Width="50" Height="20"></TextBox>
+				<Label>Length</Label>
+				<TextBox Width="50" Height="20"></TextBox>
+			</StackPanel>
+		</StackPanel>
+		-->
+
+		<!--
+		<Label>Choose output file type:</Label>
 					<ComboBox Width="100" x:Name="OutputType" IsEnabled="False">
 						<ComboBoxItem>.mp4</ComboBoxItem>
 						<ComboBoxItem>.avi</ComboBoxItem>
 						<ComboBoxItem>.mkv</ComboBoxItem>
 						<ComboBoxItem>.flv</ComboBoxItem>
 					</ComboBox>
-					</StackPanel>
-					<Button Margin="0,5,0,0" x:Name="ConvertButton" Click="ConvertButton_Click">Convert</Button>
-					<Button Margin="0,5,0,0" x:Name="CancelButton" Click="CancelButton_Click" IsEnabled="False">Cancel</Button>
-					<ProgressBar x:Name="FFMpegProgress" Height="20" Margin="0,5,0,0"></ProgressBar>
-					<TextBox x:Name="ConsoleBox" Height="177" Margin="0,5,0,0" VerticalScrollBarVisibility="Visible" FontSize="7" FontFamily="Consolas"></TextBox>
-					<StackPanel Orientation="Horizontal">
-						<Label>Last Line</Label>
-						<TextBox Width="387" FontSize="7" FontFamily="Consolas" x:Name="LastLine" TextChanged="LastLine_TextChanged"></TextBox>
-					</StackPanel>
-					<StackPanel Orientation="Horizontal">
-						<Label>Time</Label>
-						<TextBox Width="427" FontSize="7" FontFamily="Consolas" x:Name="Time"></TextBox>
-					</StackPanel>
-					<StackPanel Orientation="Horizontal">
-						<Label>Speed</Label>
-						<TextBox Width="427" FontSize="7" FontFamily="Consolas" x:Name="Speed"></TextBox>
-					</StackPanel>
-				</StackPanel>
-			</GroupItem>
-		</GroupBox>
+		-->
+
 	</Grid>
 </Window>
